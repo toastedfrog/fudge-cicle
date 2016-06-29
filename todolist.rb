@@ -26,9 +26,6 @@ class TodoList
 	end
 	
 	def item_complete(item_name)
-		#@items.each do |item|
-		#	item.mark_complete if item.description == item_name
-		#end
 		(get_item item_name).mark_complete
 	end
 	
@@ -40,10 +37,29 @@ class TodoList
 		(get_item item_name).completed_status
 	end
 	
+	def print_list
+		width = max_item_length
+		puts format("%#{width}s", @title)
+		@items.each do |item|
+			item.print_item width*-1
+			puts "-"*item.description.length
+		end
+	end
+	
 	# utility
 	
 	def get_item(item_name)
 		@items.bsearch {|item| item.description == item_name}
+	end
+	
+	def max_item_length
+		max_length = 0
+		@items.each do |item|
+			if item.description.length > max_length
+				max_length = item.description.length
+			end
+		end
+		max_length
 	end
 	
 end
@@ -65,8 +81,8 @@ class Item
 	end
 	
 	# Print function
-	def print_item
-		puts "#{format("%-40s", @description)} Completed: #{@completed_status}"
+	def print_item(width = @description.length)
+		puts "#{format("%#{width}s", @description)} Completed: #{@completed_status?"Complete":"Incomplete"}"
 	end
 	
 end
