@@ -25,6 +25,27 @@ class TodoList
 		@title = new_name
 	end
 	
+	def item_complete(item_name)
+		#@items.each do |item|
+		#	item.mark_complete if item.description == item_name
+		#end
+		(get_item item_name).mark_complete
+	end
+	
+	def item_incomplete(item_name)
+		(get_item item_name).mark_incomplete
+	end
+	
+	def complete?(item_name)
+		(get_item item_name).completed_status
+	end
+	
+	# utility
+	
+	def get_item(item_name)
+		@items.bsearch {|item| item.description == item_name}
+	end
+	
 end
 
 class Item
@@ -34,4 +55,13 @@ class Item
 		@description = item_description
 		@completed_status = false
 	end
+	
+	def mark_complete
+		@completed_status = true
+	end
+	
+	def mark_incomplete
+		@completed_status = false
+	end
+	
 end
