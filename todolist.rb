@@ -1,7 +1,7 @@
 class TodoList
 	attr_reader :title, :items
 
-	def initialize(list_title)
+	def initialize(list_title = "New Todo")
 		@title = list_title
 		@items = Array.new
 	end
@@ -19,6 +19,10 @@ class TodoList
 				@items.delete_at list_item
 			end
 		end
+	end
+	
+	def rename(new_name)
+		@title = new_name
 	end
 	
 end
