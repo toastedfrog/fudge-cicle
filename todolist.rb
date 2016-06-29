@@ -64,4 +64,9 @@ class Item
 		@completed_status = false
 	end
 	
+	# Print function
+	def print_item
+		puts "#{format("%-40s", @description)} Completed: #{@completed_status}"
+	end
+	
 end
