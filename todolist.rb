@@ -11,6 +11,16 @@ class TodoList
 		@items.push(item)
 	end
 	
+	def delete_item(*list)
+		list.each do |list_item|
+			if list_item.is_a? String
+				@items.delete_if { |todo_item| todo_item.description == list_item }
+			elsif list_item.is_a? Integer
+				@items.delete_at list_item
+			end
+		end
+	end
+	
 end
 
 class Item
