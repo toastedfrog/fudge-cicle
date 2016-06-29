@@ -41,7 +41,7 @@ class TodoList
 		width = max_item_length
 		puts format("%#{width}s", @title)
 		@items.each do |item|
-			item.print_item width*-1
+			item.print_item width
 			puts "-"*item.description.length
 		end
 	end
@@ -82,7 +82,9 @@ class Item
 	
 	# Print function
 	def print_item(width = @description.length)
-		puts "#{format("%#{width}s", @description)} Completed: #{@completed_status?"Complete":"Incomplete"}"
+		separator_min_width = 3
+		separator = "*"*(width-@description.length+separator_min_width)
+		puts "#{@description}  #{separator}  #{@completed_status?"Complete":"Incomplete"}"
 	end
 	
 end
