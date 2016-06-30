@@ -60,16 +60,37 @@ class TodoList
 		end
 	end
 	
-	# utility
-	
-	def get_item(item_name)
-		index = 0
-		until (@items[index].description != item_name) && (index < @items.length)
-			index += 1
-		end
-		@items[index]
+	def save_list(filename = "#{@title}.todo")
+		#save_file = File.new(filename, "w+")
+		#file_string = Marshal.dump(self)
+		#save_file << file_string
+		#save_file.close
+		File.open(filename, "w+") {|f| f.write(Marshal.dump(self))}
 	end
 	
+	def load_list(filename = "listfile.todo")
+		#load_file = File.open(filename, "r")
+		#file_string = load_file.read
+		#self << Marshal.load(file_string)
+		#load_file.close
+		loaded_todo = Marshal.load(File.read(filename))
+		@title = loaded_todo.title
+		@items.clear
+		loaded_todo.items.each { |item| @items.push item }
+	end
+	
+	# utility functions
+	
+	# retrieve item instance by description name
+	def get_item(item_name)
+		index = 0
+		until (@items[index].description == item_name) || (index >= @items.length)
+			index += 1
+		end
+		index >= @items.length ? nil : @items[index]
+	end
+	
+	# sort out the maximum item description length
 	def max_item_length
 		max_length = 0
 		@items.each do |item|
