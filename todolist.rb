@@ -6,9 +6,11 @@ class TodoList
 		@items = Array.new
 	end
 	
-	def add_item(new_item)
-		item = Item.new(new_item)
-		@items.push(item)
+	def add_item(*list)
+		list.each do |new_item|
+			item = Item.new(new_item)
+			@items.push(item)
+		end
 	end
 	
 	def delete_item(*list)
@@ -25,16 +27,28 @@ class TodoList
 		@title = new_name
 	end
 	
-	def item_complete(item_name)
-		(get_item item_name).mark_complete
+	def item_complete(item)
+		if item.is_a? Integer
+			@items[item].mark_complete
+		elsif item.is_a? String
+			(get_item item).mark_complete
+		end
 	end
 	
-	def item_incomplete(item_name)
-		(get_item item_name).mark_incomplete
+	def item_incomplete(item)
+		if item.is_a? Integer
+			@items[item].mark_incomplete
+		elsif item.is_a? String
+			(get_item item).mark_incomplete
+		end
 	end
 	
-	def complete?(item_name)
-		(get_item item_name).completed_status
+	def complete?(item)
+		if item.is_a? Integer
+			@items[item].completed_status
+		elsif item.is_a? String
+			(get_item item).completed_status
+		end
 	end
 	
 	def print_list
@@ -49,7 +63,11 @@ class TodoList
 	# utility
 	
 	def get_item(item_name)
-		@items.bsearch {|item| item.description == item_name}
+		index = 0
+		until (@items[index].description != item_name) && (index < @items.length)
+			index += 1
+		end
+		@items[index]
 	end
 	
 	def max_item_length
