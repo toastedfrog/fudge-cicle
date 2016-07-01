@@ -68,7 +68,7 @@ class TodoList
 		File.open(filename, "w+") {|f| f.write(Marshal.dump(self))}
 	end
 	
-	def load_list(filename = "listfile.todo")
+	def load_list(filename = "#{@title}.todo")
 		#load_file = File.open(filename, "r")
 		#file_string = load_file.read
 		#self << Marshal.load(file_string)
