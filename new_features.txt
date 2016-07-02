@@ -1,0 +1,7 @@
+Feature 1: save method saves the list to disk (default:"<listname>.todo"); load reconstitutes the data back into an object.
+*.save # Optionally pass a filename string
+*.load # Optionally pass a filename string
+Feature 2: List items can be referred to by their number in the list (integer) OR by their item description (string).
+Feature 3: List items can be sorted by their description and by their complete state (incomplete first).
+*.sort_description
+*.sort_complete
