@@ -4,31 +4,31 @@ require_relative 'todolist.rb'
 mylist = TodoList.new
 
 # Add four new items
-mylist.add_item "Turn Into a Dolphin", "Rob a Bank", "Eat a Tuna Fish Sandwich", "Meet Van Gogh"
+mylist.add "Meet Van Gogh", "Brush My Teeth", "Ride a Dinosaur", "Eat a Tuna Fish Sandwich"
 
 # Print the list
-mylist.print_list
+mylist.print
 
 # Delete the first item
-mylist.delete_item 0
+mylist.delete 1
 
 # Print the list
-mylist.print_list
+mylist.print
 
 # Delete the second item
-mylist.delete_item 1
+mylist.delete 2
 
 # Print the list
-mylist.print_list
+mylist.print
 
 # Update the completion status of the first item to complete
-mylist.item_complete 0
+mylist.complete 1
 
 # Print the list
-mylist.print_list
+mylist.print
 
 # Update the title of the list
-mylist.rename "Things I'm Going to Accomplish on Tuesday"
+mylist.rename "Realistic Goals"
 
 # Print the list
-mylist.print_list
+mylist.print

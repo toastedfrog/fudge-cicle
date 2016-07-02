@@ -6,19 +6,21 @@ class TodoList
 		@items = Array.new
 	end
 	
-	def add_item(*list)
+	# Accepts an array of descriptor strings
+	def add(*list)
 		list.each do |new_item|
 			item = Item.new(new_item)
 			@items.push(item)
 		end
 	end
 	
-	def delete_item(*list)
+	# Accepts item numbers or descriptor strings
+	def delete(*list)
 		list.each do |list_item|
 			if list_item.is_a? String
 				@items.delete_if { |todo_item| todo_item.description == list_item }
 			elsif list_item.is_a? Integer
-				@items.delete_at list_item
+				@items.delete_at list_item-1
 			end
 		end
 	end
@@ -27,61 +29,72 @@ class TodoList
 		@title = new_name
 	end
 	
-	def item_complete(item)
+	# Marks an item complete; accepts item number or descriptor
+	def complete(item)
 		if item.is_a? Integer
-			@items[item].mark_complete
+			@items[item-1].mark_complete
 		elsif item.is_a? String
 			(get_item item).mark_complete
 		end
 	end
 	
-	def item_incomplete(item)
+	# Marks an item incomplete; accepts item number or descriptor
+	def incomplete(item)
 		if item.is_a? Integer
-			@items[item].mark_incomplete
+			@items[item-1].mark_incomplete
 		elsif item.is_a? String
 			(get_item item).mark_incomplete
 		end
 	end
 	
+	# Returns true/false if an item is complete; accepts item number or descriptor
 	def complete?(item)
 		if item.is_a? Integer
-			@items[item].completed_status
+			@items[item-1].completed_status
 		elsif item.is_a? String
 			(get_item item).completed_status
 		end
 	end
 	
-	def print_list
-		width = max_item_length
-		puts format("%#{width}s", @title)
-		@items.each do |item|
-			item.print_item width
-			puts "-"*item.description.length
+	# Pretty-prints the list
+	def print(spaces = 1, min_separator = 3)
+		description_length = max_item_length
+		width = description_length+spaces*2+min_separator+"Incomplete".length
+		title_position = (width+@title.length)/2
+		puts format("%#{title_position}s", "-"*@title.length)
+		puts format("%#{title_position}s", @title)
+		puts format("%#{title_position}s", "-"*@title.length)
+		@items.each_index do |index|
+			@items[index].print_item index+1, description_length, spaces, min_separator
 		end
 	end
 	
-	def save_list(filename = "#{@title}.todo")
-		#save_file = File.new(filename, "w+")
-		#file_string = Marshal.dump(self)
-		#save_file << file_string
-		#save_file.close
+	# Marshals the object and saves to a file
+	def save(filename = "#{@title}.todo")
 		File.open(filename, "w+") {|f| f.write(Marshal.dump(self))}
 	end
 	
-	def load_list(filename = "#{@title}.todo")
-		#load_file = File.open(filename, "r")
-		#file_string = load_file.read
-		#self << Marshal.load(file_string)
-		#load_file.close
+	# Reconstitutes an object from file and replaces instance data with file data
+	def load(filename = "#{@title}.todo")
 		loaded_todo = Marshal.load(File.read(filename))
 		@title = loaded_todo.title
 		@items.clear
 		loaded_todo.items.each { |item| @items.push item }
 	end
 	
-	# utility functions
+	# Alphabetizes the list by description
+	def sort_description
+		@items.sort_by! {|item| item.description}
+	end
 	
-	# retrieve item instance by description name
+	# Sorts the list by completeness
+	def sort_complete
+		@items.sort_by! {|item| item.completed_status ? "B" : "A"}
+	end
+	
+	# Utility functions
+	# ******
+	# Retrieve item instance by description name
 	def get_item(item_name)
 		index = 0
 		until (@items[index].description == item_name) || (index >= @items.length)
@@ -90,7 +103,7 @@ class TodoList
 		index >= @items.length ? nil : @items[index]
 	end
 	
-	# sort out the maximum item description length
+	# Find the maximum item description length in the list
 	def max_item_length
 		max_length = 0
 		@items.each do |item|
@@ -110,20 +123,23 @@ class Item
 		@description = item_description
 		@completed_status = false
 	end
-	
+
+	# Sets the completion status to true	
 	def mark_complete
 		@completed_status = true
 	end
 	
+	# Sets the completion status to false
 	def mark_incomplete
 		@completed_status = false
 	end
 	
-	# Print function
-	def print_item(width = @description.length)
-		separator_min_width = 3
-		separator = "*"*(width-@description.length+separator_min_width)
-		puts "#{@description}  #{separator}  #{@completed_status?"Complete":"Incomplete"}"
+	# Print function; minimum separator width is set by a variable
+	def print_item(item_num, width = @description.length, spacing, min_separator)
+		separator = "*"*(width-@description.length+min_separator)
+		spaces = " "*spacing
+		puts "#{format("%-3s",item_num)}#{@description}#{spaces}#{separator}#{spaces}#{@completed_status?"Complete":"Incomplete"}"
+			puts " "*3+"-"*@description.length
 	end
 	
 end
