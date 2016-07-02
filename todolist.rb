@@ -135,7 +135,7 @@ class Item
 	end
 	
 	# Print function; minimum separator width is set by a variable
-	def print_item(item_num, width = @description.length, spacing, min_separator)
+	def print_item(item_num = "", width = @description.length, spacing = 2, min_separator = 3)
 		separator = "*"*(width-@description.length+min_separator)
 		spaces = " "*spacing
 		puts "#{format("%-3s",item_num)}#{@description}#{spaces}#{separator}#{spaces}#{@completed_status?"Complete":"Incomplete"}"
